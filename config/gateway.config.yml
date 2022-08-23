@@ -1,0 +1,54 @@
+http:
+  port: 8081
+
+apiEndpoints:
+  apix:
+    host: localhost
+    paths: "/users"
+  posts:
+    host: localhost
+    paths: "/posts"
+  todosx:
+    host: localhost
+    paths: "/todos"
+  brand:
+    host: localhost
+    paths: "/brand/:name"
+
+serviceEndpoints:
+  httpbin:
+    url: "https://json.activelava.net"
+  postbin:
+    url: "https://jsonplaceholder.typicode.com"
+  brandbin:
+    url: "https://admindash.comcitybd.com/api"
+
+policies:
+  - proxy
+
+pipelines:
+  apix:
+    apiEndpoints:
+      - apix
+    policies:
+      - proxy:
+          - action:
+              serviceEndpoint: httpbin
+              changeOrigin: true
+  posts:
+    apiEndpoints:
+      - posts
+      - todosx
+    policies:
+      - proxy:
+          - action:
+              serviceEndpoint: postbin
+              changeOrigin: true
+  brand:
+    apiEndpoints:
+      - brand
+    policies:
+      - proxy:
+          - action:
+              serviceEndpoint: brandbin
+              changeOrigin: true
